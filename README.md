@@ -1,71 +1,131 @@
-# AutoCheck.ConsoleApp - Motor de Vistoria Veicular
+# AutoCheck ConsoleApp
 
-Mini-projeto desenvolvido em C# com .NET para praticar os conteúdos do Módulo 01 do curso de Desenvolvedor Back-End.
+Aplicação de console desenvolvida em **C# com .NET** como mini-projeto prático do Módulo 01 do curso de Desenvolvedor Back-End.
 
-## O que o sistema faz
+O projeto simula um processo simples de vistoria veicular, permitindo cadastrar veículos, responder checklists específicos e gerar o resultado da avaliação com base em uma pontuação definida para cada item.
 
-O AutoCheck é uma aplicação de console que registra vistorias de três tipos de veículos:
+---
 
-- Carro;
-- Moto;
-- Caminhão.
+## Sobre o projeto
 
-Cada veículo possui um checklist obrigatório. Durante a vistoria, cada item recebe um dos seguintes status:
+O sistema permite realizar vistorias em três categorias de veículos:
 
-- **Bom** = 10 pontos;
-- **Regular** = 5 pontos;
-- **Ruim** = 0 pontos.
+* Carros
+* Motos
+* Caminhões
 
-Depois do preenchimento, o sistema calcula a pontuação, o percentual de aprovação e classifica o veículo em uma das faixas:
+Cada tipo de veículo possui informações próprias e uma lista de itens obrigatórios que devem ser avaliados durante a vistoria.
 
-- **90% a 100%**: Aprovado com Excelência;
-- **60% a 89%**: Aprovado com Apontamentos;
-- **0% a 59%**: Reprovado na Vistoria.
+Para cada item, o usuário deve informar uma das seguintes condições:
 
-O programa também mostra itens críticos, itens de atenção e recomendações simples de manutenção.
+| Condição | Pontuação |
+| -------- | --------: |
+| Bom      | 10 pontos |
+| Regular  |  5 pontos |
+| Ruim     |  0 pontos |
 
-## Estrutura do projeto
+Ao finalizar a avaliação, a aplicação calcula automaticamente a pontuação obtida, o percentual final e a situação do veículo.
+
+---
+
+## Resultado da vistoria
+
+A classificação é definida de acordo com o percentual alcançado:
+
+| Resultado     | Situação                  |
+| ------------- | ------------------------- |
+| 90% até 100%  | Aprovado com Excelência   |
+| 60% até 89%   | Aprovado com Apontamentos |
+| Abaixo de 60% | Reprovado na Vistoria     |
+
+Além da classificação, o sistema também identifica itens que necessitam de atenção e apresenta recomendações relacionadas às condições encontradas.
+
+---
+
+## Funcionalidades
+
+Entre as principais funcionalidades implementadas estão:
+
+* Cadastro dos dados básicos do veículo;
+* Seleção entre Carro, Moto e Caminhão;
+* Checklist específico conforme o tipo escolhido;
+* Avaliação dos itens como Bom, Regular ou Ruim;
+* Cálculo automático da pontuação;
+* Cálculo do percentual de aprovação;
+* Classificação final da vistoria;
+* Identificação de itens críticos;
+* Exibição de recomendações;
+* Consulta das vistorias realizadas durante a execução do programa.
+
+---
+
+## Estrutura da aplicação
 
 ```text
 autocheck-dotnet/
+│
 ├── src/
 │   └── AutoCheck.ConsoleApp/
-│       ├── Program.cs
 │       ├── Models/
-│       │   ├── ItemVistoria.cs
 │       │   ├── Veiculo.cs
 │       │   ├── Carro.cs
 │       │   ├── Moto.cs
-│       │   └── Caminhao.cs
+│       │   ├── Caminhao.cs
+│       │   └── ItemVistoria.cs
+│       │
 │       ├── Services/
 │       │   └── MotorVistoria.cs
+│       │
+│       ├── Program.cs
 │       └── AutoCheck.ConsoleApp.csproj
+│
 └── README.md
 ```
 
-## Como executar
+---
 
-### Pré-requisito
+## Responsabilidade das classes
 
-Ter o **.NET 8 SDK** instalado.
+### `Veiculo`
 
-Para verificar:
+Classe base do projeto. Reúne os atributos compartilhados entre os diferentes tipos de veículos e disponibiliza o checklist padrão da vistoria.
 
-```bash
-dotnet --version
-```
+### `Carro`
 
-### Executar o projeto
+Representa um veículo do tipo carro. Herda as características de `Veiculo` e adiciona informações e itens de vistoria específicos dessa categoria.
 
-Na pasta raiz do repositório, execute:
+### `Moto`
 
-```bash
-dotnet run --project src/AutoCheck.ConsoleApp
-```
+Representa motocicletas e também herda da classe `Veiculo`, mantendo suas próprias características e itens adicionais de avaliação.
 
-## Menu principal
+### `Caminhao`
 
-O programa permanece em execução até o usuário escolher a opção `0`.
+Classe utilizada para representar caminhões, incluindo propriedades e verificações específicas para esse tipo de veículo.
+
+### `ItemVistoria`
+
+Armazena as informações referentes a cada item analisado no checklist, como descrição e condição informada pelo usuário.
+
+### `MotorVistoria`
+
+Responsável pelas regras utilizadas durante a avaliação, incluindo:
+
+* conversão dos status em pontos;
+* cálculo da pontuação total;
+* cálculo do percentual;
+* classificação do veículo;
+* identificação de pendências;
+* geração de recomendações.
+
+### `Program`
+
+Responsável pela interação com o usuário através do terminal, incluindo os menus, entrada de dados, execução das vistorias e apresentação dos resultados.
+
+---
+
+## Menu da aplicação
+
+Ao iniciar o sistema, o usuário encontra o seguinte menu:
 
 ```text
 1 - Realizar Nova Vistoria
@@ -73,110 +133,105 @@ O programa permanece em execução até o usuário escolher a opção `0`.
 0 - Sair
 ```
 
-Na opção de nova vistoria, o usuário escolhe Carro, Moto ou Caminhão, informa os dados do veículo e responde o checklist com `Bom`, `Regular` ou `Ruim`.
+A aplicação continua em execução até que seja selecionada a opção `0`.
 
-## Regras de negócio implementadas
+---
 
-### Pontuação por item
+## Cálculo utilizado
 
-| Status | Pontos |
-|---|---:|
-| Bom | 10 |
-| Regular | 5 |
-| Ruim | 0 |
+A pontuação máxima depende da quantidade de itens presentes no checklist.
 
-### Percentual de aprovação
+O percentual é calculado utilizando:
 
 ```text
-Percentual = (Pontuação Obtida / Pontuação Máxima Possível) x 100
+Percentual = (Pontos Obtidos / Pontuação Máxima) * 100
 ```
 
-Foi feito o `cast` para `double` antes da divisão para evitar divisão inteira.
+No código, a divisão utiliza conversão para `double`, garantindo que o cálculo mantenha as casas decimais e não seja tratado como uma divisão entre números inteiros.
 
-### Classificação final
+---
 
-| Percentual | Classificação |
-|---|---|
-| 90% a 100% | Aprovado com Excelência |
-| 60% a 89% | Aprovado com Apontamentos |
-| 0% a 59% | Reprovado na Vistoria |
+## Tecnologias e conceitos utilizados
 
-## Conceitos de C# e POO utilizados
+O desenvolvimento foi realizado utilizando conceitos introdutórios de **C# e Programação Orientada a Objetos**, entre eles:
 
-O projeto foi mantido propositalmente simples, usando os conteúdos básicos estudados no módulo:
+* `string`
+* `int`
+* `double`
+* `bool`
+* `List<T>`
+* Classes e objetos
+* Métodos
+* Propriedades
+* Construtores
+* Herança
+* Encapsulamento
+* Polimorfismo
+* `virtual`
+* `override`
+* `this`
+* `if / else`
+* `switch`
+* `for`
+* `foreach`
+* `while`
+* `do-while`
 
-- Tipos primitivos: `string`, `int`, `double` e `bool`;
-- Listas com `List<T>`;
-- Laços `foreach`, `for`, `while` e `do-while`;
-- Condicionais `if/else` e `switch`;
-- Classes e objetos;
-- Propriedades com `get` e `set`;
-- Construtores explícitos;
-- Uso de `this` para atribuição de propriedades;
-- Herança com `Carro`, `Moto` e `Caminhao` herdando de `Veiculo`;
-- Polimorfismo com `virtual` e `override` no método `ObterChecklistObrigatorio()`;
-- Encapsulamento por meio das classes, propriedades e métodos.
+Para manter o projeto alinhado ao conteúdo estudado no módulo, as coleções são manipuladas utilizando estruturas de repetição tradicionais, sem utilização de LINQ.
 
-Não foi utilizado LINQ. As listas são percorridas com laços tradicionais, conforme solicitado no enunciado.
+---
 
-## Organização das classes
+## Requisitos para execução
 
-### ItemVistoria
+É necessário ter o **.NET 8 SDK** instalado no computador.
 
-Representa um item avaliado e armazena o nome e o status informado.
+Para conferir a versão disponível:
 
-### Veiculo
+```bash
+dotnet --version
+```
 
-Classe base com os dados comuns de qualquer veículo e com o checklist genérico.
+---
 
-### Carro, Moto e Caminhao
+## Executando o projeto
 
-São subclasses de `Veiculo`. Cada uma possui seus atributos específicos e sobrescreve o checklist para adicionar itens próprios.
+Abra o terminal na pasta raiz do repositório e execute:
 
-### MotorVistoria
+```bash
+dotnet run --project src/AutoCheck.ConsoleApp
+```
 
-Centraliza as regras simples de pontuação, percentual, classificação, separação das pendências e recomendações de oficina.
+A aplicação será iniciada diretamente no terminal.
 
-### Program
+---
 
-Contém o menu da aplicação, leitura dos dados no terminal e exibição dos relatórios.
+## Exemplo de utilização
 
-## Sobre arquitetura cliente-servidor
+Um fluxo comum dentro do sistema seria:
 
-Uma arquitetura cliente-servidor normalmente separa quem solicita uma informação ou serviço (cliente) de quem processa e responde à solicitação (servidor).
+1. Selecionar a opção para iniciar uma nova vistoria;
+2. Informar qual tipo de veículo será avaliado;
+3. Preencher os dados solicitados;
+4. Responder cada item do checklist;
+5. Finalizar a vistoria;
+6. Visualizar a pontuação, percentual e classificação;
+7. Consultar posteriormente o relatório das vistorias realizadas;
+8. Encerrar o sistema pelo menu principal.
 
-Este mini-projeto não implementa uma arquitetura cliente-servidor real, pois é uma aplicação de console executada localmente. Mesmo assim, a separação entre `Program`, modelos e `MotorVistoria` ajuda a praticar a ideia de dividir responsabilidades, o que pode ser reaproveitado futuramente em uma API .NET.
+---
 
-## Exemplo de fluxo de uso
+## Objetivo acadêmico
 
-1. Escolher `1 - Realizar Nova Vistoria`;
-2. Escolher o tipo de veículo;
-3. Informar marca, modelo, ano, quilometragem e atributos específicos;
-4. Responder cada item com `Bom`, `Regular` ou `Ruim`;
-5. Conferir a pontuação e a classificação exibidas;
-6. Escolher `2 - Exibir Relatório das Vistorias` para consultar tudo que foi registrado durante a execução;
-7. Escolher `0 - Sair` para encerrar.
+O objetivo deste projeto é aplicar na prática os fundamentos vistos durante o início do curso, principalmente organização de classes, estruturas de decisão e repetição, coleções e conceitos básicos de orientação a objetos.
 
-## Sugestão de commits
+A proposta busca manter uma estrutura simples e fácil de compreender, priorizando a aplicação dos conceitos estudados em vez da utilização de recursos mais avançados da linguagem.
 
-Para um projeto individual, o enunciado pede no mínimo 5 commits descritivos no imperativo. Uma sequência possível é:
+---
+
+## Apresentação do projeto
+
+O vídeo demonstrando o funcionamento da aplicação poderá ser acessado através do link abaixo:
 
 ```text
-Cria estrutura inicial do projeto console
-Adiciona classe base Veiculo e ItemVistoria
-Adiciona subclasses e checklists específicos
-Implementa regras de pontuação e classificação
-Adiciona menu e relatório final das vistorias
+Link do vídeo: https://drive.google.com/file/d/1xL68Ovcf4haTxgtH9vk9HbhYdggqv3z6/view?usp=drive_link
 ```
-
-O ideal é criar cada commit conforme você realmente concluir cada etapa do desenvolvimento.
-
-## Vídeo de apresentação
-
-Adicione aqui o link do vídeo antes da entrega:
-
-```text
-Link do vídeo: COLE_AQUI_O_LINK_DO_GOOGLE_DRIVE_OU_YOUTUBE
-```
-
-O vídeo deve seguir as regras do enunciado, incluindo limite de tempo e explicação do funcionamento e das decisões de POO com suas próprias palavras.
